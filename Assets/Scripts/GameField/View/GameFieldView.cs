@@ -27,20 +27,19 @@ namespace View
         private void Awake()
         {
             var collisionHandler = new CollisionHandler();        
-            var elementSpawner = new ElementSpawner();
 
             var pointsModel = new PointsModel(collisionHandler);
             var pointsViewModel = new PointsViewModel(pointsModel);           
 
-            var gameFieldModel = new GameFieldModel(_bottomBorder, _topBorder, _rightBorder, _leftBorder, elementSpawner, collisionHandler);
+            var gameFieldModel = new GameFieldModel(_bottomBorder, _topBorder, _rightBorder, _leftBorder,collisionHandler);
             var gameFieldViewModel = new GameFieldViewModel(gameFieldModel);
             gameFieldViewModel.Bind(this);
 
-            var snakeModel = new SnakeModel(elementSpawner, collisionHandler);
+            var snakeModel = new SnakeModel(collisionHandler);
             var snakeHeadViewModel = new SnakeHeadViewModel(snakeModel);
             var snakeViewModel = new SnakeViewModel(snakeModel, _numOfStartSnakeLength);
 
-            var snakeHeadView = elementSpawner.CreateSnake();
+            var snakeHeadView = PrefabCreator.Create<SnakeHeadView>();
             snakeHeadView.Init(collisionHandler,snakeHeadViewModel);
             
             _snakeView.Init ( pointsViewModel);

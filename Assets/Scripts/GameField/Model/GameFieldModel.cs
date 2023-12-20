@@ -1,4 +1,5 @@
-﻿using Snake.ViewModel.CollisionHandler;
+﻿using Markers;
+using Snake.ViewModel.CollisionHandler;
 using UnityEngine;
 using ViewModel;
 
@@ -6,7 +7,6 @@ namespace Model
 {
     public class GameFieldModel : IGameFieldModel
     {
-        private readonly IElementSpawner _elementSpawner;
         private readonly ICollisionHandler _collisionHandler;
         private const int _offSet = 1;
 
@@ -23,7 +23,6 @@ namespace Model
             Transform topBorder,
             Transform rightBorder,
             Transform leftBorder,
-            IElementSpawner elementSpawner,
             ICollisionHandler collisionHandler)
         {
             LeftBorder = leftBorder;
@@ -32,8 +31,6 @@ namespace Model
             BottomBorder = bottomBorder;
 
             _collisionHandler = collisionHandler;
-            _elementSpawner = elementSpawner;
-
             _collisionHandler.OnSnakePickedFood += OnSnakePickedFood;
             _collisionHandler.OnSnakeCrash += EndGame;
         }
@@ -74,7 +71,9 @@ namespace Model
         private void CreateFood()
         {
             var position = GetRandomFoodPosition();
-            _elementSpawner.CreateFood(position);
+            //_elementSpawner.CreateFood(position);
+            var food = PrefabCreator.Create<FoodMarker>();
+            food.transform.position = position;
         }
     }
 }

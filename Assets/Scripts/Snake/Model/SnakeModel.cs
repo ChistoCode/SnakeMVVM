@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Markers;
 using Snake.ViewModel.CollisionHandler;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,6 @@ namespace Model
 
         private const int _maxIgnoreIndex = 3;
         private const float _elementOffset = 0.10f;
-        private readonly IElementSpawner _elementSpawner;
         private readonly ICollisionHandler _collisionHandler;
         private List<Transform> _elements;
         private Side _moveSide = Side.Forward;
@@ -27,25 +27,23 @@ namespace Model
         public int ElementsCount => Elements.Count;
         public IReadOnlyList<Transform> Elements => _elements;
 
-        public SnakeModel(IElementSpawner elementSpawner, ICollisionHandler collisionHandler)
+        public SnakeModel(ICollisionHandler collisionHandler)
         {
-            
-            _elementSpawner = elementSpawner;
             _collisionHandler = collisionHandler;
             _collisionHandler.OnSnakePickedFood += AddElement;
         }
 
         public void Init(Transform head)
         {
-            _elements = new List<Transform>();
-            _elements.Add(head);
+            _elements = new List<Transform> { head };
         }
 
         private void AddElement(GameObject obj)
         {
             var lastElement = Elements.Last();
             var position = lastElement.position - lastElement.forward;
-            var element = _elementSpawner.CreateSnakeElement(position, lastElement.rotation);
+            var element = PrefabCreator.Create<BodyMarker>();
+            element.transform.SetPositionAndRotation(position, lastElement.rotation);
             if (ElementsCount <= _maxIgnoreIndex)
                 element.SetEnabled(false);
             _elements.Add(element.transform);

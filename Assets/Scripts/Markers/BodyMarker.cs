@@ -2,6 +2,7 @@
 
 namespace Markers
 {
+    [DefaultPrefab("SnakeElement")]
     public class BodyMarker : MonoBehaviour
     {
         [SerializeField] private Collider _collider;

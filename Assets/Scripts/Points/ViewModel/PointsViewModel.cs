@@ -1,6 +1,8 @@
 ﻿using Assets.Scripts.ViewModel;
+using Model;
 using Model.Points;
 using View;
+using Zenject;
 
 namespace Snake.ViewModel.PointsViewModel
 {
@@ -8,6 +10,7 @@ namespace Snake.ViewModel.PointsViewModel
     {
         private readonly IPointsModel _pointsModel;
 
+        [Inject]
         public PointsViewModel(IPointsModel pointsModel)
         {
             _pointsModel = pointsModel;

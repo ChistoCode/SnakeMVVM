@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Model
 {
@@ -9,5 +10,8 @@ namespace Model
         Transform TopBorder { get; }
         Transform BottomBorder { get; }
         float Height { get; }
+        void StartGame();
+        void SetBorders(Transform left, Transform right, Transform top, Transform bottom);
+
     }
 }

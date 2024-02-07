@@ -8,6 +8,7 @@ using Markers;
 using Model;
 using UnityEngine;
 using View;
+using Zenject;
 
 namespace ViewModel
 {
@@ -15,6 +16,7 @@ namespace ViewModel
     {
         private readonly ISnakeModel _snakeModel;
 
+        [Inject]
         public SnakeHeadViewModel(ISnakeModel snakeModel)
         {
             _snakeModel = snakeModel;

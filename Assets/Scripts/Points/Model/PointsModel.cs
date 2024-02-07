@@ -1,6 +1,7 @@
 ﻿using Snake.ViewModel.CollisionHandler;
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace Model.Points
 {
@@ -11,6 +12,7 @@ namespace Model.Points
         public event Action<int> OnPointsAdd;
         public int Points { get; private set; }
 
+        [Inject]
         public PointsModel(ICollisionHandler collisionHandler)
         {
             _collisionHandler = collisionHandler;

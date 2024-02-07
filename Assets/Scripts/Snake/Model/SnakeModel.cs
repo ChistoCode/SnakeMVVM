@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using ViewModel;
+using Zenject;
 
 namespace Model
 {
@@ -22,15 +23,19 @@ namespace Model
         private const float _elementOffset = 0.10f;
         private readonly ICollisionHandler _collisionHandler;
         private List<Transform> _elements;
+        private PrefabCreator _prefabCreator;
         private Side _moveSide = Side.Forward;
 
         public int ElementsCount => Elements.Count;
         public IReadOnlyList<Transform> Elements => _elements;
+        
 
-        public SnakeModel(ICollisionHandler collisionHandler)
+        [Inject]
+        public SnakeModel(ICollisionHandler collisionHandler, PrefabCreator prefabCreator)
         {
             _collisionHandler = collisionHandler;
             _collisionHandler.OnSnakePickedFood += AddElement;
+            _prefabCreator = prefabCreator;
         }
 
         public void Init(Transform head)
@@ -42,7 +47,7 @@ namespace Model
         {
             var lastElement = Elements.Last();
             var position = lastElement.position - lastElement.forward;
-            var element = PrefabCreator.Create<BodyMarker>();
+            var element = _prefabCreator.Create<BodyMarker>();
             element.transform.SetPositionAndRotation(position, lastElement.rotation);
             if (ElementsCount <= _maxIgnoreIndex)
                 element.SetEnabled(false);

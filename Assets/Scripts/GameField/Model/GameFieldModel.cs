@@ -1,36 +1,30 @@
 ﻿using Markers;
 using Snake.ViewModel.CollisionHandler;
 using UnityEngine;
+using View;
 using ViewModel;
+using Zenject;
 
 namespace Model
 {
     public class GameFieldModel : IGameFieldModel
     {
         private readonly ICollisionHandler _collisionHandler;
+        private readonly PrefabCreator _prefabCreator;
         private const int _offSet = 1;
 
         public float Height => 1;
 
-        public Transform LeftBorder { get; }
-        public Transform RightBorder { get; }
-        public Transform TopBorder { get; }
-        public Transform BottomBorder { get; }
+        public Transform LeftBorder { get; private set; }
+        public Transform RightBorder { get; private set; }
+        public Transform TopBorder { get; private set; }
+        public Transform BottomBorder { get; private set; }
 
-
-        public GameFieldModel(
-            Transform bottomBorder,
-            Transform topBorder,
-            Transform rightBorder,
-            Transform leftBorder,
-            ICollisionHandler collisionHandler)
+        [Inject]
+        public GameFieldModel(ICollisionHandler collisionHandler, PrefabCreator prefabCreator)
         {
-            LeftBorder = leftBorder;
-            RightBorder = rightBorder;
-            TopBorder = topBorder;
-            BottomBorder = bottomBorder;
-
             _collisionHandler = collisionHandler;
+            _prefabCreator = prefabCreator;
             _collisionHandler.OnSnakePickedFood += OnSnakePickedFood;
             _collisionHandler.OnSnakeCrash += EndGame;
         }
@@ -55,6 +49,11 @@ namespace Model
         {
             Time.timeScale = 1;
             CreateFood();
+            CreateSnake();
+        }
+        private void CreateSnake()
+        {
+            _prefabCreator.Create<SnakeHeadView>();
         }
 
         public void EndGame()
@@ -71,9 +70,16 @@ namespace Model
         private void CreateFood()
         {
             var position = GetRandomFoodPosition();
-            //_elementSpawner.CreateFood(position);
-            var food = PrefabCreator.Create<FoodMarker>();
+            var food = _prefabCreator.Create<FoodMarker>();
             food.transform.position = position;
+        }
+
+        public void SetBorders(Transform left, Transform right, Transform top, Transform bottom)
+        {
+            LeftBorder = left;
+            RightBorder = right;
+            TopBorder = top;
+            BottomBorder = bottom;
         }
     }
 }

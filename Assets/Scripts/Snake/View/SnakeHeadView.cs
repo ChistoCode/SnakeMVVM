@@ -5,6 +5,7 @@ using Model;
 using Snake.ViewModel.CollisionHandler;
 using UnityEngine;
 using ViewModel;
+using Zenject;
 
 namespace View
 {
@@ -18,17 +19,24 @@ namespace View
 
         public event Action<float> OnMove;
         public event Action<SnakeModel.Side> OnChangeDirection;
-        
-        public void Init(ICollisionHandler collisionHandler, IViewModel<SnakeHeadView> viewModel)
+
+        [Inject]
+        public void Construct(ICollisionHandler collisionHandler, IViewModel<SnakeHeadView> viewModel)
         {
             _collisionHandler = collisionHandler;
-            viewModel.Bind(this);
+            viewModel.Bind(this);         
+        }
+
+        private void Start()
+        {
             StartCoroutine(Move());
         }
+
         public void Update()
         {
             HandleInput();
         }
+
         public void HandleInput()
         {
             if (Input.GetKeyDown(KeyCode.W)) OnChangeDirection?.Invoke(SnakeModel.Side.Forward);
